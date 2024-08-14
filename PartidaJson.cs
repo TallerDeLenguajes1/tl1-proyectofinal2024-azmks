@@ -13,9 +13,9 @@ namespace Juego
         [JsonPropertyName("ronda")]
         private int RondaActual;
         [JsonPropertyName("personajes")]
-        private Pokemon[] personajes;
+        private List<Pokemon> personajes;
         [JsonPropertyName("jefes")]
-        private Pokemon[] Jefes;
+        private List<Pokemon> Jefes;
 
         public void obtenerNombre()
         {
@@ -36,13 +36,8 @@ namespace Juego
             ResetColor();
             this.Nombre = nombre;
         }
-        /*
-        public void guardarPartida()
-        {
-
-        }
-
-        public void guardarPokemones()
+        
+        public void guardarPartida(string ruta, )
         {
 
         }
@@ -51,6 +46,6 @@ namespace Juego
         {
 
         }
-        */
+
     }
 }

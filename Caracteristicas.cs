@@ -9,10 +9,10 @@ namespace Juego
         private Random Aleatorio = new Random();
         public Caracteristicas()
         {
-            Velocidad = Aleatorio.Next(1, 10);
-            Destreza = Aleatorio.Next(1, 10);
-            Fuerza = Aleatorio.Next(1, 10);
-            Nivel = Aleatorio.Next(1, 10);
+            Velocidad = Aleatorio.Next(1, 11);
+            Destreza = Aleatorio.Next(1, 11);
+            Fuerza = Aleatorio.Next(1, 11);
+            Nivel = Aleatorio.Next(1, 11);
             Salud = 100;
         }
     }

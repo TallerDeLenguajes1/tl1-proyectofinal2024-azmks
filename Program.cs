@@ -28,11 +28,11 @@ namespace Juego
                 case 0:
                     miPartida.obtenerNombre();
                     Interfaz.mostrarInstrucciones();
-//                    miPartida.obtenerPokemones();
-//                    miPartida.crearJefes();
+                    miPartida.obtenerPokemones();
+                    miPartida.crearJefes();
                     break;
                 case 1:
-//                    miPartida.cargarPartida();
+                    miPartida.cargarPartida();
                     break;
                 case 2:
                     Environment.Exit(0);

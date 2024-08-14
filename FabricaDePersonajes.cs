@@ -2,15 +2,25 @@ using System;
 
 namespace Juego
 {
-    public class Pokemon
+    public class Personaje
     {
         private Datos InfoDatos;
         private Caracteristicas InfoCaracteristicas;
 
-        public Pokemon(Datos InfoD, Caracteristicas InfoC)
+        public Personaje(Datos InfoD, Caracteristicas InfoC)
         {
             InfoDatos = InfoD;
             InfoCaracteristicas = InfoC;
+        }
+
+        public int calcularAtaque(TipoPokemon Elemento, int Dano)
+        {
+            
+        }
+
+        public void recibirAtaque(TipoPokemon Elemento, int Dano)
+        {
+            
         }
 
         public void mostrarEstadisticas()

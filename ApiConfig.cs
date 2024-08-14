@@ -1,3 +1,9 @@
+using System.Text.Json;
+using static System.Console;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
+
 namespace Juego
 {
     public class pokeApi
@@ -7,7 +13,7 @@ namespace Juego
 
         public async Task<PokemonJson> PokemonRandom()
         {
-            int id = Semilla.Next(1, 151);  return null;
+            int id = Semilla.Next(1, 151);
             return Pokemon(id);
         }
 
@@ -20,7 +26,7 @@ namespace Juego
             }
             catch (HttpRequestException error)
             {
-                WriteLine($"ERROR. NO SE PUDO CONECTAR CON LA API: {error.message}");
+                WriteLine($"ERROR. NO SE PUDO CONECTAR CON LA API: {error.Message}");
                 return null;
             }
             catch (Exception error)
@@ -29,15 +35,21 @@ namespace Juego
                 return null;
             }
         }
-
+/*
         public List<Task<string, TipoPokemon> ObtenerJefes()
         {
 
         }
-
+*/
         public List<Task<string, TipoPokemon> ObtenerIniciales()
         {
+            int cant = 0;
 
+            do
+            {
+                //
+            }
+            while (cant < 3);
         }
         
     }

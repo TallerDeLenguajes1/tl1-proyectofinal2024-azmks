@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Juego
 {
@@ -14,34 +16,30 @@ namespace Juego
 \/    \___/|_|\_\___\____/\___|\__, |\___|_| |_|\__,_|___/
                                |___/                      
                 ";
-            string[] Opciones = {"Nueva Partida", "Cargar Partida", "Como Jugar", "Salir del Juego"};
+
+            string[] Opciones = {"Nueva Partida", "Cargar Partida", "Salir del Juego"};
             Menu Principal = new Menu(Titulo, Opciones);
             Principal.Mostrar();
             int Eleccion = Principal.Ejecutar();
+            PartidaJson miPartida = new PartidaJson();
+
             switch (Eleccion)
             {
                 case 0:
-                    PartidaJson miPartida = new PartidaJson();
                     miPartida.obtenerNombre();
-                    miPartida.obtenerPokemones();
-                    miPartida.crearJefes();
+                    Interfaz.mostrarInstrucciones();
+//                    miPartida.obtenerPokemones();
+//                    miPartida.crearJefes();
                     break;
                 case 1:
-                    PartidaJson miPartida = new PartidaJson();
-                    miPartida.cargarPartida;
+//                    miPartida.cargarPartida();
                     break;
                 case 2:
-                    do
-                    {
-                        Interfaz.mostrarInstrucciones();
-                        Eleccion = Principal.Ejecutar();
-                    }
-                    while (Eleccion == 2);
-                    break;
-                case 3:
-                    Exit();
+                    Environment.Exit(0);
                     break;
             }
+
+
         }
     }
 }

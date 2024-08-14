@@ -3,16 +3,16 @@ namespace Juego
     public class Caracteristicas
     {
         private int Velocidad;
-        private int Destreza;
         private int Fuerza;
         private int Nivel;
         private int Salud;
-        public Caracteristicas(int V, int D, int F, int N, int A)
+        private Random Aleatorio = new Random();
+        public Caracteristicas()
         {
-            Velocidad = V;
-            Destreza = D;
-            Fuerza = F;
-            Nivel = N;
+            Velocidad = Aleatorio.Next(1, 10);
+            Destreza = Aleatorio.Next(1, 10);
+            Fuerza = Aleatorio.Next(1, 10);
+            Nivel = Aleatorio.Next(1, 10);
             Salud = 100;
         }
     }

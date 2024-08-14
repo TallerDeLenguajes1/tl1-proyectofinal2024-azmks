@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using System.Text;
 using static System.Console;
 
@@ -25,16 +26,17 @@ namespace Juego
             do
             {
                 Clear();
-                Interfaz.mostrarTextoCentrado(instruccion, ConsoleColor.Magenta);
+                Interfaz.mostrarTextoCentrado(instruccion, ConsoleColor.Cyan);
                 SetCursorPosition((WindowWidth-10)/2, Console.CursorTop);
                 nombre = ReadLine();
             }
             while (nombre.Length < 3 || nombre.Length > 10 || !Interfaz.esEntradaValida(nombre));
 
             Clear();
+            ResetColor();
             this.Nombre = nombre;
         }
-
+        /*
         public void guardarPartida()
         {
 
@@ -46,5 +48,9 @@ namespace Juego
         }
 
         public void guardarJefes()
+        {
+
+        }
+        */
     }
 }

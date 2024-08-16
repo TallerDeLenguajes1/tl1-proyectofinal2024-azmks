@@ -1,51 +1,57 @@
 using System;
+using System.IO;
+using System.Text;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using System.Text;
 using static System.Console;
 
 namespace Juego
 {
     public class PartidaJson
     {
-        [JsonPropertyName("nombre")]
-        private string Nombre;
-        [JsonPropertyName("ronda")]
-        private int RondaActual;
-        [JsonPropertyName("personajes")]
-        private List<Pokemon> personajes;
-        [JsonPropertyName("jefes")]
-        private List<Pokemon> Jefes;
+        [JsonPropertyName("Nombre")]
+        public string Nombre {get; set;}
+        [JsonPropertyName("Ronda")]
+        public int RondaActual {get; set;}
+        [JsonPropertyName("Campeones")]
+        public List<Personaje> Campeones {get; set;}
+        [JsonPropertyName("Jefes")]
+        public List<Personaje> Jefes {get; set;}
 
-        public void obtenerNombre()
+        public PartidaJson() {}
+
+        public void nuevaPartida(string nombre, List<Personaje> champeons, List<Personaje> bosses)
         {
-            Clear();
-            string instruccion = "¿Como te llamas?\nTu nombre debe tener una longitud entre 3 y 10 caracteres (letras o digitos). Ademas, debe comenzar con una letra.";
-            string nombre = String.Empty;
+            RondaActual = 1;
+            Nombre = nombre;
+            Campeones = champeons;
+            Jefes = bosses;
+        }
 
-            do
+        public void GuardarPartida(int ronda, List<Personaje> champeons, List<Personaje> bosses)
+        {
+            RondaActual = ronda;
+            Campeones = champeons;
+            Jefes = bosses;
+            string rutaArchivo = $"./Partidas/{Nombre}.json";
+
+            try
             {
-                Clear();
-                Interfaz.mostrarTextoCentrado(instruccion, ConsoleColor.Cyan);
-                SetCursorPosition((WindowWidth-10)/2, Console.CursorTop);
-                nombre = ReadLine();
+                string textoJson = JsonSerializer.Serialize(this);
+                File.WriteAllText(textoJson);
             }
-            while (nombre.Length < 3 || nombre.Length > 10 || !Interfaz.esEntradaValida(nombre));
-
-            Clear();
-            ResetColor();
-            this.Nombre = nombre;
+            catch (ArgumentNullException error)
+            {
+                Interfaz.mostrarTextoCentrado($"No se pudo guardar la partida actual. Error: {error.Message}", ConsoleColor.White);
+            }
+            catch (IOException error)
+            {
+                Interfaz.mostrarTextoCentrado($"No se pudo guardar la partida actual. Error: {error.Message}", ConsoleColor.White);
+            }
+            catch (Exception error)
+            {
+                Interfaz.mostrarTextoCentrado($"No se pudo guardar la partida actual. Error: {error.Message}", ConsoleColor.White);
+            }
         }
-        
-        public void guardarPartida(string ruta, )
-        {
-
-        }
-
-        public void guardarJefes()
-        {
-
-        }
-
     }
 }

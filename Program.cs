@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using static System.Console;
 
 namespace Juego
 {
-    class Program
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
             string Titulo = @"
    ___      _          __                           _     
@@ -15,30 +16,133 @@ namespace Juego
 / ___/ (_) |   <  __/ /__|  __/ (_| |  __/ | | | (_| \__ \
 \/    \___/|_|\_\___\____/\___|\__, |\___|_| |_|\__,_|___/
                                |___/                      
-                ";
+            ";
 
-            string[] Opciones = {"Nueva Partida", "Cargar Partida", "Salir del Juego"};
+            string[] Opciones = {"Nueva Partida", "Cargar Partida", "Ver Instrucciones", "Ver Ganadores", "Salir del Juego"};
             Menu Principal = new Menu(Titulo, Opciones);
-            Principal.Mostrar();
-            int Eleccion = Principal.Ejecutar();
+            int Eleccion;
             PartidaJson miPartida = new PartidaJson();
 
-            switch (Eleccion)
+            do
             {
-                case 0:
-                    miPartida.obtenerNombre();
-                    Interfaz.mostrarInstrucciones();
-                    miPartida.obtenerPokemones();
-                    miPartida.crearJefes();
-                    break;
-                case 1:
-                    miPartida.cargarPartida();
-                    break;
-                case 2:
-                    Environment.Exit(0);
-                    break;
-            }
+                Eleccion = Principal.Ejecutar(ConsoleColor.Cyan);
+                switch (Eleccion)
+                {
+                    case 0:
+                        Interfaz.mostrarInstrucciones();
+                        string nombrePartida = Interfaz.obtenerNombre();
 
+                        Interfaz.mostrarTextoCentrado("GENERANDO TUS POKEMONES", ConsoleColor.Cyan);
+                        List<Personaje> misCampeones = FabricaDePersonajes.generarPersonajesIniciales();            
+                        System.Threading.Thread.Sleep(3000);
+                        Interfaz.mostrarTextoCentrado("GENERANDO JEFES...", ConsoleColor.Cyan);
+                        List<Personaje> misJefes = FabricaDePersonajes.generarPersonajesIniciales();
+                        System.Threading.Thread.Sleep(3000);
+
+                        miPartida.nuevaPartida(nombrePartida, misCampeones, misJefes);
+                        break;
+                    case 1:
+                        miPartida.cargarPartida();
+                        break;
+                    case 2:
+                        Interfaz.mostrarInstrucciones();
+                        break;
+                    case 3:
+                        List<Ganador> misGanadores = HistorialJson.LeerGanadores();
+                        foreach (Ganador winner in misGanadores)
+                        {
+                            Interfaz.mostrarTextoCentrado($"{winner.Nombre.ToUpper()}:", ConsoleColor.Green);
+                            foreach (string campeon in misGanadores.CampeonesGanadores)
+                            {
+                                Interfaz.mostrarTextoCentrado(campeon, ConsoleColor.White);
+                            }
+                        }
+                        Interfaz.mostrarTextoCentrado("\nPresione cualquier tecla para continuar...", ConsoleColor.White);
+                        ReadKey();
+                        break;
+                    case 4:
+                        Environment.Exit(0);
+                        break;
+                }
+            }
+            while (Eleccion == 2 || Eleccion == 3);
+
+            Menu menuEntreRondas = new Menu("¿Que desea hacer?", ["Continuar", "Guardar partida y continuar", "Salir y guardar", "Salir"]);
+            Combate juego = Combate(miPartida.Campeones, miPartida.Jefes, miPartida.RondaActual);
+            int proxRonda;
+            do
+            {
+                proxRonda = juego.ejecutarRondaActual();
+                if (proxRonda == juego.Ronda)
+                {
+                    if (juego.CampeonesLista.Count <= 0)
+                    {
+                        Interfaz.mostrarMensajePerdiste();
+                        // Espera 3 segundos antes de continuar
+                        System.Threading.Thread.Sleep(3000);
+                        Environment.Exit(0);
+                    }
+                    else 
+                    {      
+                        Interfaz.mostrarTextoCentrado($"Perdiste el combate!\nTu proxima ronda es: {proxRonda}", ComsoleColor.Red);
+                        Eleccion = menuEntreRondas.Ejecutar(ConsoleColor.Red);
+
+                        switch (Eleccion)
+                        {
+                            case 0:
+                                // Espera 3 segundos antes de continuar
+                                System.Threading.Thread.Sleep(3000);
+                                break;
+                            case 1:
+                                miPartida.GuardarPartida(juego.Ronda, juego.CampeonesLista, juego.JefesLista);
+                                // Espera 3 segundos antes de continuar
+                                System.Threading.Thread.Sleep(3000);
+                                break;
+                            case 2:
+                                miPartida.GuardarPartida(juego.Ronda, juego.CampeonesLista, juego.JefesLista);
+                                // Espera 3 segundos antes de continuar
+                                System.Threading.Thread.Sleep(3000);
+                                Environment.Exit(0);
+                                break;
+                            case 3:
+                                // Espera 3 segundos antes de continuar
+                                System.Threading.Thread.Sleep(3000);
+                                Environment.Exit(0);
+                                break;
+                        }
+                    }
+                }
+                else if (proxRonda <= 10)
+                {
+                    Interfaz.mostrarTextoCentrado($"Ganaste el combate!\nTu proxima ronda es: {proxRonda}", ComsoleColor.Red);
+                    Eleccion = menuEntreRondas.Ejecutar(ConsoleColor.Red);
+
+                    switch (Eleccion)
+                    {
+                        case 0:
+                            break;
+                        case 1:
+                            miPartida.GuardarPartida(juego.Ronda, juego.CampeonesLista, juego.JefesLista);
+                            break;
+                        case 2:
+                            miPartida.GuardarPartida(juego.Ronda, juego.CampeonesLista, juego.JefesLista);
+                            Environment.Exit(0);
+                            break;
+                        case 3:
+                            Environment.Exit(0);
+                            break;
+                    }
+                }
+                else
+                {
+                    Interfaz.mostrarMensajeGanaste();
+                    HistorialJson.GuardarGanador(miPartida.Nombre, "ganadores.json");
+                    // Espera 3 segundos antes de continuar
+                    System.Threading.Thread.Sleep(3000);
+                    Environment.Exit(0);
+                }
+            }
+            while (ronda <= 10);
 
         }
     }

@@ -4,149 +4,116 @@ namespace Juego
 {
     public class Datos
     {
-        private string Nombre;
-        private TipoPokemon Tipo1;
-        private TipoPokemon Tipo2;
-        private int Edad;
-        private List<TipoPokemon> Debilidades;
+        [JsonPropertyName("Nombre")]
+        public string Nombre {get; set;}
+        
+        [JsonPropertyName("Tipos")]
+        public List<ElementoPokemon> Tipos {get; set;}
+        
+        [JsonPropertyName("Debilidades")]
+        public List<ElementoPokemon> Debilidades {get; set;}
+        
+        [JsonPropertyName("Edad")]
+        public int Edad {get; set;}
 
-        public Datos(string N, TipoPokemon T1, TipoPokemon T2)
+        public Datos(string name, List<ElementoPokemon> Types)
         {
-            Nombre = N;
-            Tipo1 = T1;
-            Debilidades = new List<TipoPokemon>();
-            determinarDebilidades(Tipo1);
-            if (IsNullOrEmpty(T2)) Tipo2 = string.Empty();
-            else {
-                Tipo2 = T2;
-                determinarDebilidades(Tipo2);
-            }
-
-        }
-
-        public determinarDebilidades(TipoPokemon Elemento)
-        {
-            switch (Elemento)
+            Nombre = name;
+            Tipos = new List<ElementoPokemon>();
+            Debilidades = new List<ElementoPokemon>();
+            foreach (ElementoPokemon Tipo in Types)
             {
-                Acero:
-                    Debilidades.Add(Elemento.Acero);
-                    Debilidades.Add(Elemento.Agua);
-                    Debilidades.Add(Elemento.Electrico);
-                    Debilidades.Add(Elemento.Fuego);
+                Tipos.Add(Tipo);
+                determinarDebilidades(Tipo);
+            }
+            Radom rnd = new Random();
+            Edad = rnd.Next(0,301);
+        }
+
+        public void determinarDebilidades(ElementoPokemon Tipo)
+        {
+            // Segun el elemento pokemon recibido agrega a la lista de debilidades el elemento correspondiente si es que no se encuentra en la lista
+            switch (ElementoPokemon)
+            {
+                case ElementoPokemon.Acero:
+                    if (!Debilidades.Contains(ElementoPokemon.Fuego)) Debilidades.Add(ElementoPokemon.Fuego);
+                    if (!Debilidades.Contains(ElementoPokemon.Lucha)) Debilidades.Add(ElementoPokemon.Lucha);
+                    if (!Debilidades.Contains(ElementoPokemon.Tierra)) Debilidades.Add(ElementoPokemon.Tierra);
                     break;
-                Agua:
-                    Debilidades.Add(Elemento.Agua);
-                    Debilidades.Add(Elemento.Dragon);
-                    Debilidades.Add(Elemento.Planta);
+                case ElementoPokemon.Agua:
+                    if (!Debilidades.Contains(ElementoPokemon.Electrico)) Debilidades.Add(ElementoPokemon.Electrico);
+                    if (!Debilidades.Contains(ElementoPokemon.Planta)) Debilidades.Add(ElementoPokemon.Planta);
                     break;
-                Bicho:
-                    Debilidades.Add(Elemento.Acero);
-                    Debilidades.Add(Elemento.Fantasma);
-                    Debilidades.Add(Elemento.Fuego);
-                    Debilidades.Add(Elemento.Hada);
-                    Debilidades.Add(Elemento.Lucha);
-                    Debilidades.Add(Elemento.Volador);
-                    Debilidades.Add(Elemento.Veneno);
+                case ElementoPokemon.Bicho:
+                    if (!Debilidades.Contains(ElementoPokemon.Fuego)) Debilidades.Add(ElementoPokemon.Fuego);
+                    if (!Debilidades.Contains(ElementoPokemon.Volador)) Debilidades.Add(ElementoPokemon.Volador);
+                    if (!Debilidades.Contains(ElementoPokemon.Roca)) Debilidades.Add(ElementoPokemon.Roca);
                     break;
-                Dragon:
-                    Debilidades.Add(Elemento.Acero);
-                    Debilidades.Add(Elemento.Hada);
+                case ElementoPokemon.Dragon:
+                    if (!Debilidades.Contains(ElementoPokemon.Hada)) Debilidades.Add(ElementoPokemon.Hada);
+                    if (!Debilidades.Contains(ElementoPokemon.Hielo)) Debilidades.Add(ElementoPokemon.Hielo);
+                    if (!Debilidades.Contains(ElementoPokemon.Dragon)) Debilidades.Add(ElementoPokemon.Dragon);
                     break;
-                Electrico:
-                    Debilidades.Add(Elemento.Dragon);
-                    Debilidades.Add(Elemento.Electrico);
-                    Debilidades.Add(Elemento.Planta);
-                    Debilidades.Add(Elemento.Tierra);
+                case ElementoPokemon.Electrico:
+                    if (!Debilidades.Contains(ElementoPokemon.Tierra)) Debilidades.Add(ElementoPokemon.Tierra);
                     break;
-                Fantasma:
+                case ElementoPokemon.Fantasma:
+                    if (!Debilidades.Contains(ElementoPokemon.Fantasma)) Debilidades.Add(ElementoPokemon.Fantasma);
                     break;
-                Fuego:
-                    Debilidades.Add(Elemento.Hada);
-                    Debilidades.Add(Elemento.Dragon);
-                    Debilidades.Add(Elemento.Fuego);
-                    Debilidades.Add(Elemento.Roca);
+                case ElementoPokemon.Fuego:
+                    if (!Debilidades.Contains(ElementoPokemon.Agua)) Debilidades.Add(ElementoPokemon.Agua);
+                    if (!Debilidades.Contains(ElementoPokemon.Roca)) Debilidades.Add(ElementoPokemon.Roca);
+                    if (!Debilidades.Contains(ElementoPokemon.Tierra)) Debilidades.Add(ElementoPokemon.Tierra);
                     break;
-                Hada:
-                    Debilidades.Add(Elemento.Acero);
-                    Debilidades.Add(Elemento.Fuego);
-                    Debilidades.Add(Elemento.Veneno);
+                case ElementoPokemon.Hada:
+                    if (!Debilidades.Contains(ElementoPokemon.Acero)) Debilidades.Add(ElementoPokemon.Acero);
                     break;
-                Hielo:
-                    Debilidades.Add(Elemento.Acero);
-                    Debilidades.Add(Elemento.Agua);
-                    Debilidades.Add(Elemento.Fuego);
-                    Debilidades.Add(Elemento.Hielo);
+                case ElementoPokemon.Hielo:
+                    if (!Debilidades.Contains(ElementoPokemon.Acero)) Debilidades.Add(ElementoPokemon.Acero);
+                    if (!Debilidades.Contains(ElementoPokemon.Fuego)) Debilidades.Add(ElementoPokemon.Fuego);
+                    if (!Debilidades.Contains(ElementoPokemon.Lucha)) Debilidades.Add(ElementoPokemon.Lucha);
+                    if (!Debilidades.Contains(ElementoPokemon.Roca)) Debilidades.Add(ElementoPokemon.Roca);
                     break;
-                Lucha:
-                    Debilidades.Add(Elemento.Bicho);
-                    Debilidades.Add(Elemento.Fantasma);
-                    Debilidades.Add(Elemento.Hada);
-                    Debilidades.Add(Elemento.Psiquico);
-                    Debilidades.Add(Elemento.Veneno);,
-                    Debilidades.Add(Elemento.Volador);
+                case ElementoPokemon.Lucha:
+                    if (!Debilidades.Contains(ElementoPokemon.Hada)) Debilidades.Add(ElementoPokemon.Hada);
+                    if (!Debilidades.Contains(ElementoPokemon.Psiquico)) Debilidades.Add(ElementoPokemon.Psiquico);
+                    if (!Debilidades.Contains(ElementoPokemon.Volador)) Debilidades.Add(ElementoPokemon.Volador);
                     break;
-                Normal:
-                    Debilidades.Add(Elemento.Acero);
-                    Debilidades.Add(Elemento.Fantasma);
-                    Debilidades.Add(Elemento.Roca);
+                case ElementoPokemon.Normal:
+                    if (!Debilidades.Contains(ElementoPokemon.Lucha)) Debilidades.Add(ElementoPokemon.Lucha);
                     break;
-                Planta:
-                    Debilidades.Add(Elemento.Acero);
-                    Debilidades.Add(Elemento.Bicho);
-                    Debilidades.Add(Elemento.Dragon);
-                    Debilidades.Add(Elemento.Fuego);
-                    Debilidades.Add(Elemento.Planta);
-                    Debilidades.Add(Elemento.Veneno);
-                    Debilidades.Add(Elemento.Volador);
+                case ElementoPokemon.Planta:
+                    if (!Debilidades.Contains(ElementoPokemon.Bicho)) Debilidades.Add(ElementoPokemon.Bicho);
+                    if (!Debilidades.Contains(ElementoPokemon.Fuego)) Debilidades.Add(ElementoPokemon.Fuego);
+                    if (!Debilidades.Contains(ElementoPokemon.Hielo)) Debilidades.Add(ElementoPokemon.Hielo);
+                    if (!Debilidades.Contains(ElementoPokemon.Veneno)) Debilidades.Add(ElementoPokemon.Veneno);
+                    if (!Debilidades.Contains(ElementoPokemon.Volador)) Debilidades.Add(ElementoPokemon.Volador);
                     break;
-                Psiquico:
-                    Debilidades.Add(Elemento.Acero);
-                    Debilidades.Add(Elemento.Psiquico);
+                case ElementoPokemon.Psiquico:
+                    if (!Debilidades.Contains(ElementoPokemon.Bicho)) Debilidades.Add(ElementoPokemon.Bicho);
+                    if (!Debilidades.Contains(ElementoPokemon.Fantasma)) Debilidades.Add(ElementoPokemon.Fantasma);
                     break;
-                Roca:
-                    Debilidades.Add(Elemento.Acero);
-                    Debilidades.Add(Elemento.Lucha);
-                    Debilidades.Add(Elemento.Tierra);
+                case ElementoPokemon.Roca:
+                    if (!Debilidades.Contains(ElementoPokemon.Acero)) Debilidades.Add(ElementoPokemon.Acero);
+                    if (!Debilidades.Contains(ElementoPokemon.Agua)) Debilidades.Add(ElementoPokemon.Agua);
+                    if (!Debilidades.Contains(ElementoPokemon.Lucha)) Debilidades.Add(ElementoPokemon.Lucha);
+                    if (!Debilidades.Contains(ElementoPokemon.Planta)) Debilidades.Add(ElementoPokemon.Planta);
+                    if (!Debilidades.Contains(ElementoPokemon.Tierra)) Debilidades.Add(ElementoPokemon.Tierra);
                     break;
-                Tierra:
-                    Debilidades.Add(Elemento.Bicho);
-                    Debilidades.Add(Elemento.Planta);
-                    Debilidades.Add(Elemento.Volador);
+                case ElementoPokemon.Tierra:
+                    if (!Debilidades.Contains(ElementoPokemon.Agua)) Debilidades.Add(ElementoPokemon.Agua);
+                    if (!Debilidades.Contains(ElementoPokemon.Planta)) Debilidades.Add(ElementoPokemon.Planta);
                     break;
-                Veneno:
-                    Debilidades.Add(Elemento.Acero);
-                    Debilidades.Add(Elemento.Fantasma);
-                    Debilidades.Add(Elemento.Roca);
-                    Debilidades.Add(Elemento.Tierra);
-                    Debilidades.Add(Elemento.Veneno);
+                case ElementoPokemon.Veneno:
+                    if (!Debilidades.Contains(ElementoPokemon.Psiquico)) Debilidades.Add(ElementoPokemon.Psiquico);
+                    if (!Debilidades.Contains(ElementoPokemon.Tierra)) Debilidades.Add(ElementoPokemon.Tierra);
                     break;
-                Volador:
-                    Debilidades.Add(Elemento.Acero);
-                    Debilidades.Add(Elemento.Electrico);
-                    Debilidades.Add(Elemento.Roca);
+                case ElementoPokemon.Volador:
+                    if (!Debilidades.Contains(ElementoPokemon.Electrico)) Debilidades.Add(ElementoPokemon.Electrico);
+                    if (!Debilidades.Contains(ElementoPokemon.Hielo)) Debilidades.Add(ElementoPokemon.Hielo);
+                    if (!Debilidades.Contains(ElementoPokemon.Roca)) Debilidades.Add(ElementoPokemon.Roca);
                     break;
             }
         }
-    }
-
-    public enum TipoPokemon
-    {
-        Acero,
-        Agua,
-        Bicho,
-        Dragon,
-        Electrico,
-        Fantasma,
-        Fuego,
-        Hada,
-        Hielo,
-        Luca,
-        Normal,
-        Planta,
-        Psiquico,
-        Roca,
-        Tierra,
-        Veneno,
-        Volador
     }
 }

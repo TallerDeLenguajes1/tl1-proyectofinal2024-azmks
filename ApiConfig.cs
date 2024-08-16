@@ -6,49 +6,58 @@ using System.Text.Json.Serialization;
 
 namespace Juego
 {
-    public class pokeApi
+    public class ApiConfig
     {
         private static readonly HttpClient cliente = new HttpClient();
         private Random Semilla = new Random();
 
-        public async Task<PersonajesJson> PokemonRandom()
+        public async Task<PokemonJson> PokemonRandom()
         {
             int id = Semilla.Next(1, 151);
-            return Pokemon(id);
-        }
-
-        public async Task<PersonajesJson> Pokemon(int id)
-        {
             try
             {
-                var respuesta = await cliente.GetStringAsync($"https://pokeapi.co/api/v2/pokemon/{id}");
-                return JsonSerializer.Deserialize<PersonajesJson>(respuesta);
+                PokemonJson poke = await Pokemon(id);
+                return poke;
             }
             catch (HttpRequestException error)
             {
-                WriteLine($"ERROR. NO SE PUDO CONECTAR CON LA API: {error.Message}");
+                Interfaz.mostrarTextoCentrado($"No se pudo conectar con la pokeApi. Error: {error.Message}", ConsoleColor.White);
+                return null;
+            }
+            catch (JsonException error)
+            {
+                Interfaz.mostrarTextoCentrado($"No se pudo procesar la respuesta de la pokeApi. Error: {error.message}", ConsoleColor.White);
                 return null;
             }
             catch (Exception error)
             {
-                WriteLine($"ERROR: {error.message}");
+                Interfaz.mostrarTextoCentrado($"Error: {error.message}", ConsoleColor.White);
                 return null;
             }
         }
-        public List<Task<string, TipoPokemon> ObtenerIniciales()
+
+        public async Task<PokemonJson> Pokemon(int id)
         {
-            int cant = 0;
-            List<
-
-            do
+            try
             {
-                int temp_id = Semilla.Next(1, 152);
-                Pokemon poke_temp = new Personaje();
-
-                }
+                string respuesta = await cliente.GetStringAsync($"https://pokeapi.co/api/v2/pokemon/{id}");
+                return JsonSerializer.Deserialize<PokemonJson>(respuesta);
             }
-            while (cant < 3);
+            catch (HttpRequestException error)
+            {
+                Interfaz.mostrarTextoCentrado($"No se pudo conectar con la pokeApi. Error: {error.Message}", ConsoleColor.White);
+                return null;
+            }
+            catch (JsonException error)
+            {
+                Interfaz.mostrarTextoCentrado($"No se pudo procesar la respuesta de la pokeApi. Error: {error.message}", ConsoleColor.White);
+                return null;
+            }
+            catch (Exception error)
+            {
+                Interfaz.mostrarTextoCentrado($"Error: {error.message}", ConsoleColor.White);
+                return null;
+            }
         }
-        
     }
 }

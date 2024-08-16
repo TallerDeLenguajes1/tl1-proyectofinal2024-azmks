@@ -1,6 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Text;
+using System.Collections.Generic;
 using static System.Console;
 
 namespace Juego
@@ -8,23 +8,27 @@ namespace Juego
     public class Menu
     {
         private string Texto;
-        private string[] Opciones;
+        private List<string> Opciones;
         private int IndiceSeleccionado;
 
-        public Menu(string T, string[] O)
+        public Menu(string T, List<string> O)
         {
             Texto = T;
-            Opciones = O;
+            Opciones = new List<string>();
+            foreach(string opcion in O)
+            {
+                Opciones.Add(opcion);
+            }
             IndiceSeleccionado = 0;
         }
 
-        public void Mostrar()
+        public void Mostrar(ConsoleColor Color)
         {
-            Interfaz.mostrarTextoCentrado(Texto, ConsoleColor.Cyan);
+            Interfaz.mostrarTextoCentrado(Texto, Color);
             
-            for (int i = 0; i < Opciones.Length; i++)
+            for (int i = 0; i < Opciones.Count; i++)
             {
-                if (i == IndiceSeleccionado) Interfaz.mostrarTextoCentrado(Opciones[i], ConsoleColor.Cyan);
+                if (i == IndiceSeleccionado) Interfaz.mostrarTextoCentrado(Opciones[i], Color);
                 else Interfaz.mostrarTextoCentrado(Opciones[i], ConsoleColor.White);
             }
 
@@ -32,7 +36,7 @@ namespace Juego
             Interfaz.mostrarTextoCentrado("Cambie de opcion utilizando las teclas de flecha hacia arriba o hacia abajo y luege presione Enter para continuar.", ConsoleColor.DarkGray);
         }
 
-        public int Ejecutar() {
+        public int Ejecutar(ConsoleColor Color) {
             Clear();
             Mostrar();
             ConsoleKey TeclaPresionada;
@@ -42,8 +46,8 @@ namespace Juego
             {
                 TeclaPresionada = ReadKey(true).Key;
 
-                if (TeclaPresionada == ConsoleKey.DownArrow) Indice = (Indice < Opciones.Length - 1) ? Indice + 1 : 0;
-                if (TeclaPresionada == ConsoleKey.UpArrow) Indice = (Indice > 0) ? Indice - 1 : Opciones.Length - 1;
+                if (TeclaPresionada == ConsoleKey.DownArrow) Indice = (Indice < Opciones.Count - 1) ? Indice + 1 : 0;
+                if (TeclaPresionada == ConsoleKey.UpArrow) Indice = (Indice > 0) ? Indice - 1 : Opciones.Count - 1;
                 IndiceSeleccionado = Indice;
 
                 Clear();
@@ -73,18 +77,6 @@ namespace Juego
             ResetColor();
         }
 
-        public static bool esEntradaValida(string palabra)
-        {
-            bool resultado = true;
-            
-            if (String.IsNullOrEmpty(palabra)) resultado = false;
-            if (Char.IsDigit(palabra[0])) resultado = false;
-            
-            for (int i = 0; i < palabra.Length; i++) if (!Char.IsLetterOrDigit(palabra,i)) resultado = false;
-
-            return resultado;
-        }
-
         public static void mostrarInstrucciones()
         {
             Clear();
@@ -97,7 +89,7 @@ namespace Juego
                 ";
 
             string instrucciones = @"
-                El juego consiste en 8 rondas donde deberas enfrentarte a difernetes jefes
+                El juego consiste en 10 rondas donde deberas enfrentarte a difernetes jefes
                 para pasar a la siguiente ronda.
                 Al principio podras elegir 3 pokemon aleatorios para utilizar durante el combate
                 contra los jefes.
@@ -110,7 +102,68 @@ namespace Juego
             Interfaz.mostrarTextoCentrado(info, ConsoleColor.DarkGray);
             Interfaz.mostrarTextoCentrado(instrucciones, ConsoleColor.White);
             Interfaz.mostrarTextoCentrado("Presiona cualquier tecla para continuar...", ConsoleColor.White);
-            ReadKey();
+            ReadKey(true);
+        }
+
+        public static string obtenerNombre()
+        {
+            Clear();
+            string instruccion = "¿Como te llamas?\nTu nombre debe tener una longitud entre 3 y 10 caracteres (letras o digitos). Ademas, debe comenzar con una letra.\n";
+            string nombre = String.Empty;
+
+            do
+            {
+                Clear();
+                Interfaz.mostrarTextoCentrado(instruccion, ConsoleColor.Cyan);
+                SetCursorPosition((WindowWidth-10)/2, Console.CursorTop);
+                nombre = ReadLine();
+            }
+            while (nombre.Length < 3 || nombre.Length > 10 || !Extra.esNombreValido(nombre));
+
+            Clear();
+            ResetColor();
+            return nombre;
+        }
+        
+        public static void mostrarMensajePrebatalla()
+        {
+            string mensaje = @"
+            
+   _        __            _                 _ 
+  /_\      / / _   _  ___| |__   __ _ _ __ / \
+ //_\\    / / | | | |/ __| '_ \ / _` | '__/  /
+/  _  \  / /__| |_| | (__| | | | (_| | | /\_/ 
+\_/ \_/  \____/\__,_|\___|_| |_|\__,_|_| \/   
+                                              
+            ";
+            Interfaz.mostrarTextoCentrado(mensaje, ConsoleColor.Cyan);
+        }
+
+        public static void mostrarMensajeGanaste()
+        {
+            string mensaje = @"
+   ___                      _         _ 
+  / _ \__ _ _ __   __ _ ___| |_ ___  / \
+ / /_\/ _` | '_ \ / _` / __| __/ _ \/  /
+/ /_\\ (_| | | | | (_| \__ \ ||  __/\_/ 
+\____/\__,_|_| |_|\__,_|___/\__\___\/   
+                                        
+            ";
+            Interfaz.mostrarTextoCentrado("\nVenciste a todos los jefes!\n", ConsoleColor.Green);
+            Interfaz.mostrarTextoCentrado(mensaje, ConsoleColor.Green);
+        }
+        
+        public static void mostrarMensajePerdiste()
+        {
+            string mensaje = @"
+   ___             _ _     _         _ 
+  / _ \___ _ __ __| (_)___| |_ ___  / \
+ / /_)/ _ \ '__/ _` | / __| __/ _ \/  /
+/ ___/  __/ | | (_| | \__ \ ||  __/\_/ 
+\/    \___|_|  \__,_|_|___/\__\___\/    
+            ";
+            Interfaz.mostrarTextoCentrado("\nTe quedaste sin pokemones!\n", ConsoleColor.Red);
+            Interfaz.mostrarTextoCentrado(mensaje, ConsoleColor.Red);
         }
     }
 }

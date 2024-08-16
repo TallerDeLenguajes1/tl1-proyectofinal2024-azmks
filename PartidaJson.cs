@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Text.Json;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using static System.Console;
@@ -52,6 +53,46 @@ namespace Juego
             {
                 Interfaz.mostrarTextoCentrado($"No se pudo guardar la partida actual. Error: {error.Message}", ConsoleColor.White);
             }
+        }
+
+        public void CargarPartida()
+        {
+            // Obtengo archivos de la carpeta /Partidas
+            DirectoryInfo carpeta = new DirectoryInfo("./Partidas"); //Assuming Test is your Folder
+
+            FileInfo[] archivos = d.GetFiles("*.json"); //Getting Text files
+            string str = "";
+
+            foreach(FileInfo archivo in archivos )
+            {
+                str += ", " + file.Name;
+            }
+
+            string[] partidas = str.Split(',');
+
+            try
+            {
+                Menu partidas = new Menu("Que partida desea cargar?", partidas);
+                int eleccion partidas.Ejecutar(ConsoleColor.Cyan);
+                string partijson = File.ReadAllText(partidas[eleccion]);
+                PartidaJson parti = JsonSerializer.Deserialize<PartidaJson>(partijson);
+                RondaActual = parti.RondaActual;
+                Nombre = parti.Nombre;
+                Campeones = parti.Campeones;
+                Jefes = parti.Jefes;
+            }
+            catch (ArgumentNullException error)
+            {
+                Interfaz.mostrarTextoCentrado($"No se pudo guardar la partida actual. Error: {error.Message}", ConsoleColor.White);
+            }
+            catch (IOException error)
+            {
+                Interfaz.mostrarTextoCentrado($"No se pudo guardar la partida actual. Error: {error.Message}", ConsoleColor.White);
+            }
+            catch (Exception error)
+            {
+                Interfaz.mostrarTextoCentrado($"No se pudo guardar la partida actual. Error: {error.Message}", ConsoleColor.White);
+            } 
         }
     }
 }

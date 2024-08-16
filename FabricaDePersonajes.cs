@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using static System.Console;
 using System.Collections.Generic;
 
@@ -11,6 +12,8 @@ namespace Juego
     {
         private ApiConfig pokeApi = new ApiConfig();
         private Random Aleatorio = new Random();
+
+        public FabricaDePersonajes() {}
 
         public ElementoPokemon convertirTipo(string tipo)
         {
@@ -66,6 +69,9 @@ namespace Juego
                     break;
                 case "Volador":
                     return ElementoPokemon.Volador;
+                    break;
+                default:
+                    return null;
                     break;
             }
         }
@@ -124,6 +130,9 @@ namespace Juego
                 case "flying":
                     return ElementoPokemon.Volador;
                     break;
+                default:
+                    return null;
+                    break;
             }
         }
 
@@ -148,9 +157,8 @@ namespace Juego
 
                 Datos nuevosDatos = new Datos(nuevoNombre, nuevoPokeTipos);
                 Caracteristicas nuevasCaracteristicas = new Caracteristicas();
-                crearPersonaje nuevoPersonaje = new crearPersonaje(nuevosDatos, nuevasCaracteristicas);
+                Personaje nuevoPersonaje = new crearPersonaje(nuevosDatos, nuevasCaracteristicas);
                 return nuevoPersonaje;
-                conexion = true;
             }
         }
 
@@ -239,12 +247,17 @@ namespace Juego
                     {
                         List<Personaje> nuevosPersonajes = obtenerPersonajes(cantPersonajes);
                     }
+            
+                    return nuevosPersonajes;
                     break;
                 case 1:
                     List<Personaje> nuevosPersonajes = obtenerPersonajes(cantPersonajes);
+                    return nuevosPersonajes;
+                    break;
+                default:            
+                    return null;
                     break;
             }
-            return nuevosPersonajes;
         }
     }
 

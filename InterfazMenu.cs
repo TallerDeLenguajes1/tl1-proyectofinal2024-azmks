@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using System.Linq;
 using System.Collections.Generic;
 using static System.Console;
 
@@ -65,7 +66,7 @@ namespace Juego
         {
             int anchoDeConsola = WindowWidth;
             int relleno;
-            string[] lineas = Texto.Split('\n');
+            List<string> lineas = Texto.Split('\n').ToList();
 
             ForegroundColor = Color;
             foreach (string contenido in lineas)

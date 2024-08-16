@@ -1,3 +1,4 @@
+using System.Text;
 using System.Text.Json;
 using static System.Console;
 using System.Threading.Tasks;
@@ -26,12 +27,12 @@ namespace Juego
             }
             catch (JsonException error)
             {
-                Interfaz.mostrarTextoCentrado($"No se pudo procesar la respuesta de la pokeApi. Error: {error.message}", ConsoleColor.White);
+                Interfaz.mostrarTextoCentrado($"No se pudo procesar la respuesta de la pokeApi. Error: {error.Message}", ConsoleColor.White);
                 return null;
             }
             catch (Exception error)
             {
-                Interfaz.mostrarTextoCentrado($"Error: {error.message}", ConsoleColor.White);
+                Interfaz.mostrarTextoCentrado($"Error: {error.Message}", ConsoleColor.White);
                 return null;
             }
         }

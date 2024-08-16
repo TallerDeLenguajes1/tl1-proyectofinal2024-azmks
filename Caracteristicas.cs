@@ -1,14 +1,20 @@
 using System;
-using System.Collections.Generic;
+using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Collections.Generic;
 
 namespace Juego
 {
     public class Caracteristicas
     {
+        [JsonPropertyName("Fuerza")]
         public int Fuerza {get; set;}
+        [JsonPropertyName("Nivel")]
         public int Nivel {get; set;}
+        [JsonPropertyName("Salud")]
         public int Salud {get; set;}
+        [JsonPropertyName("Defensa")]
         public int Defensa {get; set;}
         private Random Aleatorio = new Random();
         public Caracteristicas()

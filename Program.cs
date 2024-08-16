@@ -32,6 +32,7 @@ namespace Juego
                         Interfaz.mostrarInstrucciones();
                         string nombrePartida = Interfaz.obtenerNombre();
 
+                        FabricaDePersonajes Fabrica = new FabricaDePersonajes();
                         Interfaz.mostrarTextoCentrado("GENERANDO TUS POKEMONES", ConsoleColor.Cyan);
                         List<Personaje> misCampeones = FabricaDePersonajes.generarPersonajesIniciales();            
                         System.Threading.Thread.Sleep(3000);
@@ -48,11 +49,11 @@ namespace Juego
                         Interfaz.mostrarInstrucciones();
                         break;
                     case 3:
-                        List<Ganador> misGanadores = HistorialJson.LeerGanadores();
+                        List<Ganador> misGanadores = HistorialJson.LeerGanadores("ganadores.json");
                         foreach (Ganador winner in misGanadores)
                         {
                             Interfaz.mostrarTextoCentrado($"{winner.Nombre.ToUpper()}:", ConsoleColor.Green);
-                            foreach (string campeon in misGanadores.CampeonesGanadores)
+                            foreach (string campeon in winner.CampeonesGanadores)
                             {
                                 Interfaz.mostrarTextoCentrado(campeon, ConsoleColor.White);
                             }
@@ -68,7 +69,7 @@ namespace Juego
             while (Eleccion == 2 || Eleccion == 3);
 
             Menu menuEntreRondas = new Menu("¿Que desea hacer?", ["Continuar", "Guardar partida y continuar", "Salir y guardar", "Salir"]);
-            Combate juego = Combate(miPartida.Campeones, miPartida.Jefes, miPartida.RondaActual);
+            Combate juego = new Combate(miPartida.Campeones, miPartida.Jefes, miPartida.RondaActual);
             int proxRonda;
             do
             {
@@ -142,7 +143,7 @@ namespace Juego
                     Environment.Exit(0);
                 }
             }
-            while (ronda <= 10);
+            while (proxRonda <= 10);
 
         }
     }

@@ -1,0 +1,14 @@
+C:\Users\Mikael\Desktop\PokeLegends\bin\Debug\net8.0\PokeLegends.exe
+C:\Users\Mikael\Desktop\PokeLegends\bin\Debug\net8.0\PokeLegends.deps.json
+C:\Users\Mikael\Desktop\PokeLegends\bin\Debug\net8.0\PokeLegends.runtimeconfig.json
+C:\Users\Mikael\Desktop\PokeLegends\bin\Debug\net8.0\PokeLegends.dll
+C:\Users\Mikael\Desktop\PokeLegends\bin\Debug\net8.0\PokeLegends.pdb
+C:\Users\Mikael\Desktop\PokeLegends\obj\Debug\net8.0\PokeLegends.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Mikael\Desktop\PokeLegends\obj\Debug\net8.0\PokeLegends.AssemblyInfoInputs.cache
+C:\Users\Mikael\Desktop\PokeLegends\obj\Debug\net8.0\PokeLegends.AssemblyInfo.cs
+C:\Users\Mikael\Desktop\PokeLegends\obj\Debug\net8.0\PokeLegends.csproj.CoreCompileInputs.cache
+C:\Users\Mikael\Desktop\PokeLegends\obj\Debug\net8.0\PokeLegends.dll
+C:\Users\Mikael\Desktop\PokeLegends\obj\Debug\net8.0\refint\PokeLegends.dll
+C:\Users\Mikael\Desktop\PokeLegends\obj\Debug\net8.0\PokeLegends.pdb
+C:\Users\Mikael\Desktop\PokeLegends\obj\Debug\net8.0\PokeLegends.genruntimeconfig.cache
+C:\Users\Mikael\Desktop\PokeLegends\obj\Debug\net8.0\ref\PokeLegends.dll

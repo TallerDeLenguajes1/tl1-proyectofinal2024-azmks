@@ -41,14 +41,16 @@ solo hara uso de los pokemones pertenecientes a la primera generacion.
                 ";
 
             string Instrucciones = @"
-El juego consiste en 10 rondas donde deberas enfrentarte a difernetes jefes
+El juego consiste en 10 rondas donde deberas enfrentarte a diferentes jefes
 para pasar a la siguiente ronda.
-Al principio podras elegir 3 pokemon aleatorios para utilizar durante el combate
-contra los jefes.
-Al final de cada ronda podras elegir entre subir de nivel de nivel a un pokemon
-o curarlo.
-El juego finalizara en el caso que pierdas contra uno de los jefes o cuando
-hayas derrotado al ultimo de ellos.
+Se generaran 10 pokemones aleatorios traidos de la api, o del archivo predeterminado
+de personajes en caso de conexion fallida
+Al final de cada ronda tu pokemon subira de nivel y podras elegir entre
+diferentes recompensas en caso de ganar.
+Si fuiste vencido en un combate con un jefe, este subira de nivel y pelearas
+con el proximo pokemon disponible.
+El juego finalizara en el caso que te quedes sin pokemones para pelear o cuando
+hayas derrotado al ultimo de los jefes.
             ";
 
             MostrarTextoCentrado(Info, ConsoleColor.DarkGray);

@@ -13,6 +13,6 @@ diferentes recompensas en caso de ganar.
 Si fuiste vencido en un combate con un jefe, este subira de nivel y pelearas
 con el proximo pokemon disponible.
 El juego finalizara en el caso que te quedes sin pokemones para pelear o cuando
-hayas derrotado al ultimo de los jefes.
+hayas derrotado al ultimo jefe en la ronda 10.
 
 LINK de la API: https://pokeapi.co/api/v2/

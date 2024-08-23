@@ -1,29 +1,25 @@
-using System;
-using System.Text;
-using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Collections.Generic;
 
 namespace Juego
 {
     public class Caracteristicas
     {
-        [JsonPropertyName("Fuerza")]
-        public int Fuerza {get; set;}
-        [JsonPropertyName("Nivel")]
-        public int Nivel {get; set;}
         [JsonPropertyName("Salud")]
         public int Salud {get; set;}
+        [JsonPropertyName("Fuerza")]
+        public int Fuerza {get; set;}
         [JsonPropertyName("Defensa")]
         public int Defensa {get; set;}
-        private Random Aleatorio = new Random();
+        [JsonPropertyName("Nivel")]
+        public int Nivel {get; set;}
+        
         public Caracteristicas()
         {
-            Fuerza = Aleatorio.Next(1, 11);
-            Nivel = Aleatorio.Next(1, 11);
-            Defensa = Aleatorio.Next(1, 101);
+            Random Aleatorio = new Random();
             Salud = 100;
+            Fuerza = Aleatorio.Next(1,11);
+            Defensa = Aleatorio.Next(1,101);
+            Nivel = Aleatorio.Next(1,11);
         }
     }
-
 }

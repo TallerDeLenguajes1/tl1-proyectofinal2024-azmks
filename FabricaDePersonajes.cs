@@ -1,271 +1,258 @@
-using System;
 using System.IO;
-using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using static System.Console;
-using System.Collections.Generic;
 
 namespace Juego
 {
-    public class FabricaDePersonajes
+    public static class FabricaDePersonajes
     {
-        private ApiConfig pokeApi = new ApiConfig();
-        private Random Aleatorio = new Random();
-
-        public FabricaDePersonajes() {}
-
-        public ElementoPokemon convertirTipo(string tipo)
+        public static Personaje ObtenerPersonajeAleatorio()
         {
-            switch (tipo)
-            {      
-                case "Acero":
-                    return ElementoPokemon.Acero;
-                    break;
-                case "Agua":
-                    return ElementoPokemon.Agua;
-                    break;
-                case "Bicho":
-                    return ElementoPokemon.Bicho;
-                    break;
-                case "Dragon":
-                    return ElementoPokemon.Dragon;
-                    break;
-                case "Electrico":
-                    return ElementoPokemon.Electrico;
-                    break;
-                case "Fantasma":
-                    return ElementoPokemon.Fantasma;
-                    break;
-                case "Fuego":
-                    return ElementoPokemon.Fuego;
-                    break;
-                case "Hada":
-                    return ElementoPokemon.Hada;
-                    break;
-                case "Hielo":
-                    return ElementoPokemon.Hielo;
-                    break;
-                case "Lucha":
-                    return ElementoPokemon.Lucha;
-                    break;
-                case "Normal":
-                    return ElementoPokemon.Normal;
-                    break;
-                case "Planta":
-                    return ElementoPokemon.Planta;
-                    break;
-                case "Psiquico":
-                    return ElementoPokemon.Psiquico;
-                    break;
-                case "Roca":
-                    return ElementoPokemon.Roca;
-                    break;
-                case "Tierra":
-                    return ElementoPokemon.Tierra;
-                    break;
-                case "Veneno":
-                    return ElementoPokemon.Veneno;
-                    break;
-                case "Volador":
-                    return ElementoPokemon.Volador;
-                    break;
-                default:
-                    return null;
-                    break;
-            }
-        }
-        public ElementoPokemon traducirTipos(string tipo)
-        {
-            switch (tipo)
-            {      
-                case "steel":
-                    return ElementoPokemon.Acero;
-                    break;
-                case "water":
-                    return ElementoPokemon.Agua;
-                    break;
-                case "bug":
-                    return ElementoPokemon.Bicho;
-                    break;
-                case "dragon":
-                    return ElementoPokemon.Dragon;
-                    break;
-                case "electric":
-                    return ElementoPokemon.Electrico;
-                    break;
-                case "ghost":
-                    return ElementoPokemon.Fantasma;
-                    break;
-                case "fire":
-                    return ElementoPokemon.Fuego;
-                    break;
-                case "fairy":
-                    return ElementoPokemon.Hada;
-                    break;
-                case "ice":
-                    return ElementoPokemon.Hielo;
-                    break;
-                case "fighting":
-                    return ElementoPokemon.Lucha;
-                    break;
-                case "normal":
-                    return ElementoPokemon.Normal;
-                    break;
-                case "grass":
-                    return ElementoPokemon.Planta;
-                    break;
-                case "psychic":
-                    return ElementoPokemon.Psiquico;
-                    break;
-                case "rock":
-                    return ElementoPokemon.Roca;
-                    break;
-                case "ground":
-                    return ElementoPokemon.Tierra;
-                    break;
-                case "poison":
-                    return ElementoPokemon.Veneno;
-                    break;
-                case "flying":
-                    return ElementoPokemon.Volador;
-                    break;
-                default:
-                    return null;
-                    break;
-            }
-        }
-
-        // Metodo para crear pokemones con informacion obtenida de la pokeApi
-        public async Task<Personaje> crearPersonaje()
-        {
-            PersonajeJson nuevoPoke = await pokeApi.PokemonRandom();
-            if (nuevoPoke == null)
-            {
-                Interfaz.mostrarTextoCentrado("Intento fallido de obtener un pokemon aleatorio de la pokeApi", ConsoleColor.White);
-                return null;
-            }
-            else
-            {
-                string nuevoNombre = nuevoPoke.name;
-                List<ElementoPokemon> nuevoPokeTipos = new List<ElementoPokemon>();
-
-                foreach(typeInfo infoElemento in nuevoPoke.types)
-                {
-                    nuevoPokeTipos.Add(traducirTipos(infoElemento.type.name));
-                }
-
-                Datos nuevosDatos = new Datos(nuevoNombre, nuevoPokeTipos);
-                Caracteristicas nuevasCaracteristicas = new Caracteristicas();
-                Personaje nuevoPersonaje = new crearPersonaje(nuevosDatos, nuevasCaracteristicas);
-                return nuevoPersonaje;
-            }
-        }
-
-        // Metodo para obtener una lista de pokemones precargados
-        public List<Personaje> obtenerPersonajes(int cantidad)
-        {
+            // Trato de cargar la lista de personajes predeterminados llamando a la funcion LeerPersonajes() definida en la
+            // clase estatica PersonajesJson y obtengo un personaje aleatorio (hago uso de un numero aleatorio como indice para lograrlo).
+            // En caso que haya algún error en el intento retorno null.
             try
             {
-                // Creo una lista de personajes vacia
-                List<Personaje> nuevosPersonajes = new List<Personaje>();
-
-                // Cargo en una lista los 25 pokemones precargados utilizando un archivo json
-                string predeterminadosJson = File.ReadAllText("personajes.json");
-                List<PredeterminadoJson> pokeLista = JsonSerializer.Deserialize<List<PredeterminadoJson>>(predeterminadosJson);
-                int index;
-
-                // Genero numeros aleatorios para poder acceder a pokemones aleatorios en la lista de precargados
-                for (int i = 0; i < cantidad; i++)
+                List<Personaje> PersonajesGuardados = PersonajesJson.LeerPersonajes();
+                if (PersonajesGuardados.Count > 0)
                 {
-                    index = Aleatorio.Next(0,26);
-
-                    // Creo los nombres, tipos, datos y caracteristicas de los personajes para añadirlos en la lista
-                    string nombre = pokeLista[index].Nombre;
-                    List<ElementoPokemon> tipos = new List<ElementoPokemon>();
-
-                    // De la lista de tipos (que contiene elementos del tipo string) que obtuve del json, llamo a una funcion para
-                    // convertirlos en el tipo ELementoTipo para poder agregarlos a la lista Tipos (que es del tipo ElementosPokemon)
-                    foreach (string tipoStr in pokeLista[index].Tipos)
-                    {
-                        tipos.Add(convertirTipo(tipoStr));
-                    }
-
-                    Datos nuevosDatos = new Datos(nombre, tipos);
-                    Caracteristicas nuevasCaracteristicas = new Caracteristicas();
-
-                    nuevosPersonajes.Add(new Personaje(nuevosDatos, nuevasCaracteristicas));
+                    Random Aleatorio = new Random();
+                    int RandomIndice = Aleatorio.Next(0, PersonajesGuardados.Count);
+                    Personaje NuevoPersonaje = PersonajesGuardados[RandomIndice];
+                    return NuevoPersonaje;
                 }
-                
-                return nuevosPersonajes;
-            }
+                else return null;
+            } 
             catch (JsonException error)
-            {
-                Interfaz.mostrarTextoCentrado($"Error inesperado al intentar cargar un personaje predeterminado. Error: {error.Message}", ConsoleColor.White);
+            {   
+                ForegroundColor = ConsoleColor.DarkGray;
+                ResetColor();
+                Console.WriteLine($"Error al intentar procesar el archivo 'personajes.json': {error.Message}.");
+                
+                return null;
             }
             catch (Exception error)
             {
-                Interfaz.mostrarTextoCentrado($"Error inesperado al intentar cargar un personaje predeterminado. Error: {error.Message}", ConsoleColor.White);
+                ForegroundColor = ConsoleColor.DarkGray;
+                ResetColor();
+                Console.WriteLine($"Error al intentar acceder a los personajes predeterminados: {error.Message}.");
+                
+                return null;
             }
-            return null;
         }
 
-        // Metodo para generar los pokemones iniciales
-        public async Task<List<Personaje>> generarPersonajesIniciales()
+        public static async Task<List<Personaje>> GenerarPersonajes(int CantPersonajes = 10)
         {
-            Clear();
-            int cantPersonajes = 10;
+            // Creo una lista para insertar los nuevos personajes
+            List<Personaje> NuevosPersonajes = new List<Personaje>();
 
-            // Creo un menu para que el usuario decida si quiere utilizar la api o utilizar valores guardados
-            Menu preguntarPorApi = new Menu("¿Como desea obtener sus pokemones?", ["Utilizar pokeApi", "Utilizar Pokemones Predeterminados"]);
-            int eleccion = preguntarPorApi.Ejecutar(ConsoleColor.Cyan);
+            // Creo una lista que contendra los elementos del personaje creado
+            List<ElementoPokemon> ListaTipos;
 
-            switch (eleccion)
+            // Creo un numero aleatorio que servira de id del pokemon. Toma valores del 1 al 151 (pokemones de la primera generacion)
+            Random Aleatorio = new Random();
+            int RandomId;
+
+            // Variable que contendra el nombre del nuevo pokemon creado para insertar en la lista
+            string NombrePoke;
+            // Variable que contendra los datos del nuevo pokemon creado para insertar en la lista
+            Datos NuevosDatos;
+            // Variable que contendra las caracteristicas del nuevo pokemon creado para insertar en la lista
+            Caracteristicas NuevasCaracteristicas;
+            // Variable que contendra al nuevo pokemon creado para insertar en la lista
+            Personaje NuevoPersonaje;
+
+            for (int i = 0; i < CantPersonajes; i++)
             {
-                case 0:
-                    int intento = 1;
-                    bool conexionEstablecida = false;
-
-                    // Intento conectar con la api hasta 5 veces, si no se logro generar una conexion
-                    // se obtendra los pokemones por predeterminado
-                    while (intento < 6 && !conexionEstablecida)
+                // Si la respuesta de la api es valida, creo los datos y caracteristicas para instanciar un nuevo personaje
+                // e insertarlo en la lista. En caso que haya cualquier error al intentarlo, obtengo un personaje llamando
+                // a la funcion ObtenerPersonajeAleatorio() y lo agrego a la lista (en caso que sea una respuesta valida)
+                Clear();
+                Interfaz.MostrarTextoCentrado("\nGenerando Personajes...\nPor favor espere", ConsoleColor.Cyan);
+                try
+                {
+                    RandomId = Aleatorio.Next(1,152);
+                    var RandomPoke = await PokeApi.Pokemon(RandomId);
+                    NombrePoke = Extra.Capitalizar(RandomPoke.name);
+                
+                    ListaTipos = new List<ElementoPokemon>();
+                    foreach (typeInfo Tipo in RandomPoke.types)
                     {
-                        Interfaz.mostrarTextoCentrado("Intentando conectar con la pokeApi...", ConsoleColor.White);
-                        try
-                        {
-                            List<Personaje> nuevosPersonajes = new List<Personaje>();
-                            for (int i = 0; i < cantPersonajes; i++) nuevosPersonajes.Add(await crearPersonaje());
-                            conexionEstablecida = true;
-                        }
-                        catch (HttpRequestException)
-                        {
-                            intento++;
-                        }
+                        ListaTipos.Add(TraducirTipo(Tipo.type.name));
                     }
 
-                    if (!conexionEstablecida)
-                    {
-                        List<Personaje> nuevosPersonajes = obtenerPersonajes(cantPersonajes);
-                    }
-            
-                    return nuevosPersonajes;
+                    NuevosDatos = new Datos(NombrePoke, ListaTipos);
+                    NuevasCaracteristicas = new Caracteristicas();
+
+                    NuevoPersonaje = new Personaje(NuevosDatos, NuevasCaracteristicas);
+                    NuevosPersonajes.Add(NuevoPersonaje);
+
+                    Interfaz.MostrarTextoCentrado("\nPersonajes creados exitosamente!", ConsoleColor.Cyan);
+                }   
+                catch (HttpRequestException error)
+                {
+                    ForegroundColor = ConsoleColor.DarkGray;
+                    Console.WriteLine($"Error al intentar conectar con la pokeApi: {error.Message}.");
+                    Console.WriteLine($"Obteniendo personaje predeterminado aleatorio...");
+                    ResetColor();
+                    
+                    NuevoPersonaje = ObtenerPersonajeAleatorio();
+                    if (NuevoPersonaje != null) NuevosPersonajes.Add(ObtenerPersonajeAleatorio());
+                }
+                catch (JsonException error)
+                {
+                    ForegroundColor = ConsoleColor.DarkGray;
+                    Console.WriteLine($"Error al intentar procesar la respuesta de la pokeApi: {error.Message}.");
+                    Console.WriteLine($"Obteniendo personaje predeterminado aleatorio...");
+                    ResetColor();
+
+                    NuevoPersonaje = ObtenerPersonajeAleatorio();
+                    if (NuevoPersonaje != null) NuevosPersonajes.Add(NuevoPersonaje);
+                }
+                catch (Exception error)
+                {
+                    ForegroundColor = ConsoleColor.DarkGray;
+                    Console.WriteLine($"Error al intentar generar un nuevo personaje: {error.Message}.");
+                    Console.WriteLine($"Obteniendo personaje predeterminado aleatorio...");
+                    ResetColor();
+
+                    NuevoPersonaje = ObtenerPersonajeAleatorio();
+                    if (NuevoPersonaje != null) NuevosPersonajes.Add(NuevoPersonaje);
+                }
+            }
+            // En el peor escenario, donde fallan tanto la llamada a la api para crear el personaje como la funcion
+            // ObtenerPersonajeAleatorio(), se devuelve una lista vacia.
+            return NuevosPersonajes;
+        }
+
+        public static ElementoPokemon TraducirTipo(string tipo)
+        {
+            // Traduzco un string que contiene el nombre de un elemento pokemon en ingles y devuelvo el valor del tipo
+            // ELementoPokemon correspondiente.
+            ElementoPokemon ElePoke;
+            switch (tipo)
+            {
+                case "steel":
+                    ElePoke = ElementoPokemon.Acero;
                     break;
-                case 1:
-                    List<Personaje> nuevosPersonajes = obtenerPersonajes(cantPersonajes);
-                    return nuevosPersonajes;
+                case "water":
+                    ElePoke = ElementoPokemon.Agua;
                     break;
-                default:            
-                    return null;
+                case "bug":
+                    ElePoke = ElementoPokemon.Bicho;
+                    break;
+                case "dragon":
+                    ElePoke = ElementoPokemon.Dragon;
+                    break;
+                case "electric":
+                    ElePoke = ElementoPokemon.Electrico;
+                    break;
+                case "ghost":
+                    ElePoke = ElementoPokemon.Fantasma;
+                    break;
+                case "fire":
+                    ElePoke = ElementoPokemon.Fuego;
+                    break;
+                case "fairy":
+                    ElePoke = ElementoPokemon.Hada;
+                    break;
+                case "ice":
+                    ElePoke = ElementoPokemon.Hielo;
+                    break;
+                case "fighting":
+                    ElePoke = ElementoPokemon.Lucha;
+                    break;
+                case "normal":
+                    ElePoke = ElementoPokemon.Normal;
+                    break;
+                case "grass":
+                    ElePoke = ElementoPokemon.Planta;
+                    break;
+                case "psychic":
+                    ElePoke = ElementoPokemon.Psiquico;
+                    break;
+                case "rock":
+                    ElePoke = ElementoPokemon.Roca;
+                    break;
+                case "ground":
+                    ElePoke = ElementoPokemon.Tierra;
+                    break;
+                case "poison":
+                    ElePoke = ElementoPokemon.Veneno;
+                    break;
+                case "flying":
+                    ElePoke = ElementoPokemon.Volador;
+                    break;
+                default:
+                    ElePoke = ElementoPokemon.Ninguno;
                     break;
             }
+            return ElePoke;
         }
-    }
 
-    public class PredeterminadoJson
-    {
-        [JsonPropertyName("Nombre")]
-        public string Nombre {get; set;}
-        [JsonPropertyName("Tipos")]
-        public List<string> Tipos {get; set;}
+        public static ElementoPokemon ConvertirTipo(string tipo)
+        {
+            // Traduzco un string que contiene el nombre de un elemento pokemon en español y devuelvo el valor del tipo
+            // ELementoPokemon correspondiente.
+            ElementoPokemon ElePoke;
+            switch (tipo)
+            {
+                case "Acero":
+                    ElePoke = ElementoPokemon.Acero;
+                    break;
+                case "Agua":
+                    ElePoke = ElementoPokemon.Agua;
+                    break;
+                case "Bicho":
+                    ElePoke = ElementoPokemon.Bicho;
+                    break;
+                case "Dragon":
+                    ElePoke = ElementoPokemon.Dragon;
+                    break;
+                case "Electrico":
+                    ElePoke = ElementoPokemon.Electrico;
+                    break;
+                case "Fantasma":
+                    ElePoke = ElementoPokemon.Fantasma;
+                    break;
+                case "Fuego":
+                    ElePoke = ElementoPokemon.Fuego;
+                    break;
+                case "Hada":
+                    ElePoke = ElementoPokemon.Hada;
+                    break;
+                case "Hielo":
+                    ElePoke = ElementoPokemon.Hielo;
+                    break;
+                case "Lucha":
+                    ElePoke = ElementoPokemon.Lucha;
+                    break;
+                case "Normal":
+                    ElePoke = ElementoPokemon.Agua;
+                    break;
+                case "Planta":
+                    ElePoke = ElementoPokemon.Planta;
+                    break;
+                case "Psiquico":
+                    ElePoke = ElementoPokemon.Psiquico;
+                    break;
+                case "Roca":
+                    ElePoke = ElementoPokemon.Roca;
+                    break;
+                case "Tierra":
+                    ElePoke = ElementoPokemon.Tierra;
+                    break;
+                case "Veneno":
+                    ElePoke = ElementoPokemon.Veneno;
+                    break;
+                case "Volador":
+                    ElePoke = ElementoPokemon.Volador;
+                    break;
+                default:
+                    ElePoke = ElementoPokemon.Ninguno;
+                    break;
+            }
+            return ElePoke;
+        }
     }
 }
